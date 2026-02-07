@@ -1,0 +1,85 @@
+@api_gateway_HostAddress = http://localhost:5230
+
+### Login - Valid Credentials (Admin)
+POST {{api_gateway_HostAddress}}/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "password123"
+}
+
+### Login - Valid Credentials (User)
+POST {{api_gateway_HostAddress}}/login
+Content-Type: application/json
+
+{
+  "username": "user1",
+  "password": "user1pass"
+}
+
+### Login - Invalid Credentials
+POST {{api_gateway_HostAddress}}/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "wrongpassword"
+}
+
+### Validate Token
+POST {{api_gateway_HostAddress}}/validate-token?token=YOUR_JWT_TOKEN_HERE
+Accept: application/json
+
+###
+
+### Check if Token has Admin Role
+POST {{api_gateway_HostAddress}}/check-role?token=YOUR_JWT_TOKEN_HERE&role=Admin
+Accept: application/json
+
+###
+
+### Check if Token has User Role
+POST {{api_gateway_HostAddress}}/check-role?token=YOUR_JWT_TOKEN_HERE&role=User
+Accept: application/json
+
+###
+
+### Get User Roles by Username
+GET {{api_gateway_HostAddress}}/user-roles/admin
+Accept: application/json
+
+###
+
+### Get User Roles by Username (user1)
+GET {{api_gateway_HostAddress}}/user-roles/user1
+Accept: application/json
+
+###
+
+### Authenticate with Google
+POST {{api_gateway_HostAddress}}/auth/google
+Content-Type: application/json
+
+{
+  "provider": "google",
+  "token": "YOUR_GOOGLE_ID_TOKEN_HERE"
+}
+
+###
+
+### Authenticate with Facebook
+POST {{api_gateway_HostAddress}}/auth/facebook
+Content-Type: application/json
+
+{
+  "provider": "facebook",
+  "token": "YOUR_FACEBOOK_ACCESS_TOKEN_HERE"
+}
+
+###
+
+GET {{api_gateway_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
