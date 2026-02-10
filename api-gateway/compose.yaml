@@ -1,10 +1,46 @@
-# Please refer https://aka.ms/HTTPSinContainer on how to setup an https developer certificate for your ASP.NET Core service.
+# SQL Server + API Gateway Docker Compose Setup
 
 services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sqlserver-db
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "YourPassword123!"
+      MSSQL_PID: Express
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+    healthcheck:
+      test: /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "YourPassword123!" -Q "SELECT 1" -C
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - kulonga-network
+
   apigateway:
     image: apigateway
     build:
       context: .
       dockerfile: api-gateway/Dockerfile
+    container_name: api-gateway
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ConnectionStrings__DefaultConnection: "Server=sqlserver;Database=ApiGatewayDb;User Id=sa;Password=YourPassword123!;TrustServerCertificate=true;"
     ports:
-      - 5230:5230
+      - "5230:5230"
+    networks:
+      - kulonga-network
+
+volumes:
+  sqlserver_data:
+    driver: local
+
+networks:
+  kulonga-network:
+    driver: bridge

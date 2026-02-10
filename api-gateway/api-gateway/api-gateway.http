@@ -1,5 +1,8 @@
 @api_gateway_HostAddress = http://localhost:5230
 
+
+### LOGIN SESSION ###
+
 ### Login - Valid Credentials (Admin)
 POST {{api_gateway_HostAddress}}/login
 Content-Type: application/json
@@ -79,7 +82,204 @@ Content-Type: application/json
 
 ###
 
-GET {{api_gateway_HostAddress}}/weatherforecast/
+### GATEWAY SERVICE CALLS ###
+
+### Gateway - GET Request to External API (JSONPlaceholder)
+GET {{api_gateway_HostAddress}}/gateway/call?url=/posts/1
 Accept: application/json
 
 ###
+
+### Gateway - GET Request to Another Microservice
+GET {{api_gateway_HostAddress}}/gateway/call?url=http://localhost:5000/api/users
+Accept: application/json
+
+###
+
+### Gateway - GET All Posts from JSONPlaceholder (load-balanced backends)
+GET {{api_gateway_HostAddress}}/gateway/call?url=/posts
+Accept: application/json
+
+###
+
+### Gateway - GET Users from JSONPlaceholder (load-balanced backends)
+GET {{api_gateway_HostAddress}}/gateway/call?url=/users
+Accept: application/json
+
+###
+
+### Gateway - GET Comments by Post ID
+GET {{api_gateway_HostAddress}}/gateway/call?url=https://jsonplaceholder.typicode.com/posts/1/comments
+Accept: application/json
+
+###
+
+### Get Gateway Backends Status
+GET {{api_gateway_HostAddress}}/gateway/backends
+Accept: application/json
+
+###
+
+### LICENSE SERVICE ENDPOINTS ###
+
+### Create License for User
+POST {{api_gateway_HostAddress}}/license/create?userId=1&licenseType=Professional&expiryDays=365&maxDevices=5
+Accept: application/json
+
+###
+
+### Create Basic License
+POST {{api_gateway_HostAddress}}/license/create?userId=2&licenseType=Basic&expiryDays=30&maxDevices=1
+Accept: application/json
+
+###
+
+### Get License by User ID
+GET {{api_gateway_HostAddress}}/license/user/1
+Accept: application/json
+
+###
+
+### Get License by User ID (user 2)
+GET {{api_gateway_HostAddress}}/license/user/2
+Accept: application/json
+
+###
+
+### Get License by License Key
+GET {{api_gateway_HostAddress}}/license/key/XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXX
+Accept: application/json
+
+###
+
+### Validate License Key
+GET {{api_gateway_HostAddress}}/license/validate/XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXX
+Accept: application/json
+
+###
+
+### Renew License (365 days)
+POST {{api_gateway_HostAddress}}/license/renew/1?expiryDays=365
+Accept: application/json
+
+###
+
+### Renew License (30 days)
+POST {{api_gateway_HostAddress}}/license/renew/1?expiryDays=30
+Accept: application/json
+
+###
+
+### Suspend License
+POST {{api_gateway_HostAddress}}/license/suspend/1
+Accept: application/json
+
+###
+
+### Revoke License
+POST {{api_gateway_HostAddress}}/license/revoke/1
+Accept: application/json
+
+###
+
+### Get Active Licenses
+GET {{api_gateway_HostAddress}}/license/status/Active
+Accept: application/json
+
+###
+
+### Get Suspended Licenses
+GET {{api_gateway_HostAddress}}/license/status/Suspended
+Accept: application/json
+
+###
+
+### Get Expired Licenses
+GET {{api_gateway_HostAddress}}/license/expired
+Accept: application/json
+
+###
+
+### Assign User to License
+POST {{api_gateway_HostAddress}}/license/1/user/add
+Accept: application/json
+
+###
+
+### Assign Another User to License
+POST {{api_gateway_HostAddress}}/license/1/user/add
+Accept: application/json
+
+###
+
+### Remove Assigned User from License
+POST {{api_gateway_HostAddress}}/license/1/user/remove
+Accept: application/json
+
+###
+
+### Get License Audit Logs
+GET {{api_gateway_HostAddress}}/license/1/audit
+Accept: application/json
+
+###
+
+### SCHOOL SERVICE ENDPOINTS ###
+
+### Create School
+POST {{api_gateway_HostAddress}}/schools
+Content-Type: application/json
+
+{
+  "name": "Central High School",
+  "code": "CHS-001",
+  "address": "123 Main St",
+  "city": "Springfield",
+  "state": "CA",
+  "postalCode": "90001",
+  "country": "USA",
+  "phone": "+1-555-0100",
+  "email": "info@centralhs.edu",
+  "contactPerson": "Jane Doe",
+  "studentCount": 1200
+}
+
+###
+
+### Get All Schools
+GET {{api_gateway_HostAddress}}/schools
+Accept: application/json
+
+###
+
+### Get School by ID
+GET {{api_gateway_HostAddress}}/schools/1
+Accept: application/json
+
+###
+
+### Update School
+PUT {{api_gateway_HostAddress}}/schools/1
+Content-Type: application/json
+
+{
+  "id": 1,
+  "name": "Central High School - Updated",
+  "city": "Springfield",
+  "studentCount": 1250
+}
+
+###
+
+### Delete School
+DELETE {{api_gateway_HostAddress}}/schools/1
+Accept: application/json
+
+###
+
+### Get Schools by City
+GET {{api_gateway_HostAddress}}/schools/city/Springfield
+Accept: application/json
+
+###
+

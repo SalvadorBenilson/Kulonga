@@ -1,6 +1,25 @@
-# Please refer https://aka.ms/HTTPSinContainer on how to setup an https developer certificate for your ASP.NET Core service.
+# Debug compose with SQL Server for development with debugging
 
 services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sqlserver-db-debug
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "YourPassword123!"
+      MSSQL_PID: Express
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver_data_debug:/var/opt/mssql
+    healthcheck:
+      test: /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "YourPassword123!" -Q "SELECT 1" -C
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - kulonga-network-debug
+
   apigateway:
     image: apigateway
     build:
@@ -8,9 +27,24 @@ services:
       dockerfile: api-gateway/Dockerfile
       args:
         - configuration=Debug
-    ports:
-      - 5230:5230
+    container_name: api-gateway-debug
+    depends_on:
+      sqlserver:
+        condition: service_healthy
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__DefaultConnection: "Server=sqlserver;Database=ApiGatewayDb;User Id=sa;Password=YourPassword123!;TrustServerCertificate=true;"
+    ports:
+      - "5230:5230"
     volumes:
       - ~/.vsdbg:/remote_debugger:rw
+    networks:
+      - kulonga-network-debug
+
+volumes:
+  sqlserver_data_debug:
+    driver: local
+
+networks:
+  kulonga-network-debug:
+    driver: bridge

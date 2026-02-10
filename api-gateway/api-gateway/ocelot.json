@@ -1,0 +1,39 @@
+{
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "api-gateway",
+          "Port": 5000
+        }
+      ],
+      "UpstreamPathTemplate": "/{everything}",
+      "UpstreamHttpMethod": [
+        "Get",
+        "Post",
+        "Put",
+        "Delete",
+        "Patch",
+        "Options"
+      ],
+      "Priority": 1,
+      "Key": "DefaultRoute"
+    }
+  ],
+  "GlobalConfiguration": {
+    "BaseUrl": "https://domain.com",
+    "RequestIdKey": "OcelotRequestId",
+    
+    "RateLimitOptions": {
+      "ClientIdHeader": "ClientId",
+      "DisableRateLimitHeaders": false,
+      "QuotaExceededMessage": "API calls quota exceeded! Maximum allowed: {0} per {1}.",
+      "RateLimitCounterPrefix": "ocelot_rate_limit",
+      "HttpStatusCodeOnQuotaExceeded": 429
+    },
+    "DownstreamScheme": "http",
+    "DownstreamHttpVersion": "1.1"
+  }
+}
